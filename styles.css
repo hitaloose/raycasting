@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+main {
+  height: 100%;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#root {
+  background-color: #333;
+  border: 1px solid #333;
+}
