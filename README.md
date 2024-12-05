@@ -2,6 +2,8 @@
 
 Raycasting Simulation is a lightweight and interactive project that demonstrates the fundamentals of raycasting using HTML5 Canvas and TypeScript. The project includes an interactive player navigating a 2D map with real-time rendering of rays cast from the player's point of view.
 
+[Preview](https://hitaloose.github.io/raycasting/)
+
 ---
 
 ## Features
