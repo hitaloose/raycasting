@@ -1,4 +1,11 @@
-import { toDeg } from "./utils.mjs";
+import { toDeg } from "./math";
+
+export const KEYS = {
+  ARROW_RIGHT: "ArrowRight",
+  ARROW_LEFT: "ArrowLeft",
+  ARROW_UP: "ArrowUp",
+  ARROW_DOWN: "ArrowDown",
+};
 
 export const TILE_SIZE = 32;
 

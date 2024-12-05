@@ -1,18 +1,29 @@
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from "./settings.mjs";
-import { KEYS, toDeg } from "./utils.mjs";
+import { KEYS, WINDOW_HEIGHT, WINDOW_WIDTH } from "../utils/constants";
+import { toDeg } from "../utils/math";
+import { Map } from "./map";
 
 export class Player {
-  constructor(map) {
-    this.map = map;
+  readonly MOVE_SPEED = 3;
+  readonly ROTATION_SPEED = toDeg(3.5);
+  readonly RADIUS = 3;
 
+  map: Map;
+  x: number;
+  y: number;
+  turnDirection: number;
+  walkDirection: number;
+  rotationAngle: number;
+
+  eventsKeyAssign: string[];
+  keysPressed: Record<string, boolean>;
+
+  constructor(map: Map) {
+    this.map = map;
     this.x = WINDOW_WIDTH / 2;
     this.y = WINDOW_HEIGHT / 2;
-    this.radius = 3;
     this.turnDirection = 0;
     this.walkDirection = 0;
     this.rotationAngle = toDeg(0);
-    this.MOVE_SPEED = 3;
-    this.ROTATION_SPEED = toDeg(3.5);
 
     this.keysPressed = {};
     this.eventsKeyAssign = Object.values(KEYS);
@@ -34,7 +45,7 @@ export class Player {
     });
   }
 
-  _turnDirection() {
+  getTurnDirection() {
     if (this.keysPressed[KEYS.ARROW_RIGHT]) {
       return 1;
     }
@@ -46,7 +57,7 @@ export class Player {
     return 0;
   }
 
-  _walkDirection() {
+  getWalkDirection() {
     if (this.keysPressed[KEYS.ARROW_UP]) {
       return 1;
     }
@@ -59,8 +70,8 @@ export class Player {
   }
 
   update() {
-    this.turnDirection = this._turnDirection();
-    this.walkDirection = this._walkDirection();
+    this.turnDirection = this.getTurnDirection();
+    this.walkDirection = this.getWalkDirection();
 
     this.rotationAngle += this.turnDirection * this.ROTATION_SPEED;
 
@@ -77,10 +88,10 @@ export class Player {
     this.y = y;
   }
 
-  render(context) {
+  render(context: CanvasRenderingContext2D) {
     context.beginPath();
     context.fillStyle = "red";
-    context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    context.arc(this.x, this.y, this.RADIUS, 0, 2 * Math.PI);
     context.fill();
   }
 }

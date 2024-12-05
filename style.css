@@ -1,0 +1,18 @@
+html,
+body,
+main {
+  height: 100%;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+canvas {
+  border: 1px #333 solid;
+  background-color: #ddd;
+}
