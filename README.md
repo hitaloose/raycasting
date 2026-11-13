@@ -1,167 +1,48 @@
-# Raycasting Simulation
+# Raycasting
 
-Raycasting Simulation is a lightweight and interactive project that demonstrates the fundamentals of raycasting using HTML5 Canvas and TypeScript. The project includes an interactive player navigating a 2D map with real-time rendering of rays cast from the player's point of view.
+A from-scratch raycaster in TypeScript and HTML5 Canvas, in the style of early 3D games: the top canvas shows the player's first-person view, the one below it the top-down map with every ray drawn.
 
-[Preview](https://hitaloose.github.io/raycasting/)
+**[Try it in the browser →](https://hitaloose.github.io/raycasting/)** — move with the arrow keys.
 
----
+## How it works
 
-## Features
+Each frame, `Raycaster` casts one ray per screen column (480 rays across a 60° field of view). Each `Ray` walks the grid with the DDA approach:
 
-- **2D Map Rendering**: Visualize a grid-based map with customizable wall and floor tiles.
-- **Player Movement**: Use keyboard controls to move the player around the map.
-- **Raycasting Mechanics**: Render rays from the player's perspective to simulate visibility.
-- **Dynamic View**: Real-time updates to the player's field of vision and map rendering.
+1. Find the first horizontal and the first vertical grid line the ray crosses.
+2. Step one tile at a time along each axis until a wall tile is hit.
+3. Keep the closer of the two hits and multiply its distance by the cosine of the angle to the view direction, which removes the fish-eye distortion.
 
----
+The wall slice for that column is drawn with a height inversely proportional to the distance, and horizontal and vertical hits get different shades so corners stay readable.
 
-## Project Structure
-
-The project consists of 13 files structured as follows:
-
-### **Root Directory**
-
-- **`index.html`**: Main HTML entry point.
-- **`package.json`**: Project metadata and scripts.
-- **`tsconfig.json`**: TypeScript configuration.
-
-### **Source Files (`src`)**
-
-#### **Main Entry**
-
-- **`main.ts`**: Initializes the canvas, player, and map; manages the game loop.
-
-#### **Entities**
-
-- **`entities/map.ts`**: Manages the grid-based map and renders it to the canvas.
-- **`entities/player.ts`**: Defines the player entity, including movement and rendering.
-- **`entities/ray.ts`**: Represents individual rays cast from the player's perspective.
-- **`entities/raycaster.ts`**: Handles raycasting logic and rendering of rays.
-
-#### **Utilities**
-
-- **`utils/constants.ts`**: Centralized constants (e.g., tile size, window dimensions, FOV).
-- **`utils/loop.ts`**: Simplified game loop implementation.
-- **`utils/math.ts`**: Mathematical utility functions for angles, normalization, and distance calculations.
-
-### **Styles**
-
-- **`styles/reset.css`**: CSS reset for consistent styling across browsers.
-- **`styles/style.css`**: Custom styles for the canvas and layout.
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v16 or higher)
-- npm (comes with Node.js)
-
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/your-username/raycasting-simulation.git
-   cd raycasting-simulation
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Development
-
-Run the development server:
-
-```bash
-npm run dev
-```
-
-Access the project at `http://localhost:3000` (or the provided URL).
-
-### Build for Production
-
-Generate a production-ready build:
-
-```bash
-npm run build
-```
-
-Preview the build:
-
-```bash
-npm run preview
-```
-
----
+| File | Role |
+|---|---|
+| `src/main.ts` | Sets up both canvases and runs the game loop |
+| `src/entities/player.ts` | Position, rotation, keyboard input and wall collision |
+| `src/entities/map.ts` | 15×10 tile grid, `hasWallAt(x, y)` |
+| `src/entities/ray.ts` | Grid intersections for one ray |
+| `src/entities/raycaster.ts` | Casts all rays and projects the wall slices |
+| `src/utils/` | Constants (tile size, FOV), loop, angle and distance math |
 
 ## Controls
 
-- **Arrow Keys**:
-  - `ArrowUp`: Move forward
-  - `ArrowDown`: Move backward
-  - `ArrowLeft`: Rotate left
-  - `ArrowRight`: Rotate right
+| Key | Action |
+|---|---|
+| `↑` / `↓` | Move forward / backward |
+| `←` / `→` | Turn left / right |
 
----
+## Running locally
 
-## File Highlights
+```bash
+git clone https://github.com/hitaloose/raycasting.git
+cd raycasting
+npm install
+npm run dev
+```
 
-### `index.html`
+`npm run build` type-checks and builds to `dist/`. Every push to `main` deploys to GitHub Pages (`.github/workflows/deploy.yml`).
 
-Defines the layout for two canvas elements:
+## Next steps
 
-- **`#pov`**: Player's field of view.
-- **`#map`**: Overhead map of the environment.
-
-### `src/entities/player.ts`
-
-Handles player position, movement, and collision detection.
-
-### `src/entities/raycaster.ts`
-
-Casts multiple rays in the player's field of vision and calculates wall intersections.
-
----
-
-## Technologies Used
-
-- **TypeScript**: Ensures type safety and cleaner code.
-- **Vite**: Lightweight and fast build tool for development.
-- **HTML5 Canvas**: Provides a rendering surface for 2D graphics.
-- **CSS**: Styling for the layout and canvas elements.
-
----
-
-## Future Enhancements
-
-- Add textures for walls and floors.
-- Implement dynamic lighting and shadows.
-- Optimize raycasting performance.
-- Expand map customization options.
-
----
-
-## Contributing
-
-Contributions are welcome! Feel free to fork this repository, make your changes, and submit a pull request.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## Acknowledgments
-
-- Inspired by raycasting techniques used in early 3D games like Wolfenstein 3D.
-- CSS Reset by [Eric Meyer](http://meyerweb.com/eric/tools/css/reset/).
-
----
-
-**Enjoy experimenting with raycasting!**
+- Textured walls
+- Distance-based shading
+- Loading maps from a file
